@@ -2,28 +2,15 @@ package controllers
 
 import (
 	"master/models"
-	"net/http"
 
 	"github.com/gofiber/fiber/v2"
-	"gorm.io/gorm"
 )
 
 func Show(c *fiber.Ctx) error {
-	id := c.Params("id")
+	var bahasa []models.BahasaPasien
+	models.DB.Find(&bahasa)
 
-	var bahasa models.BahasaPasien
-
-	if err := models.DB.Where("id = ?", id).First(&bahasa).Error; err != nil {
-		if err == gorm.ErrRecordNotFound {
-			return c.Status(http.StatusNotFound).JSON(fiber.Map{
-				"message": "Bahasa tidak ditemukan.",
-			})
-		}
-		return c.Status(http.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Internal server error",
-		})
-	}
-	return c.JSON(bahasa)
+	return c.Status(fiber.StatusOK).JSON(bahasa)
 }
 
 func Create(c *fiber.Ctx) error {
