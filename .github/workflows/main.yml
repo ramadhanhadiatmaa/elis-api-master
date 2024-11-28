@@ -44,6 +44,6 @@ jobs:
             sudo docker stop ${{ vars.CONTAINER_NAME }} || true && docker rm ${{ vars.CONTAINER_NAME }} || true
             sudo docker pull ${{ vars.IMAGE_NAME }}:v1.0
 
-            sudo docker run --restart always -d -p 5111:5111 --name ${{ vars.CONTAINER_NAME }} \
+            sudo docker run --restart always -d -p 8311:8311 --name ${{ vars.CONTAINER_NAME }} \
             -v /var/www/env_prod/.env:/app/.env \
             ${{ vars.IMAGE_NAME }}:v1.0

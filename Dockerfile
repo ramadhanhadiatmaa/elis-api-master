@@ -15,6 +15,6 @@ WORKDIR /app
 
 COPY --from=build /app/master .
 
-EXPOSE 5111
+EXPOSE 8311
 
 CMD [ "./master" ]
