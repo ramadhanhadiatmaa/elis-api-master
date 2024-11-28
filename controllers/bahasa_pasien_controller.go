@@ -2,6 +2,7 @@ package controllers
 
 import (
 	"master/models"
+	"strconv"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -33,25 +34,45 @@ func Create(c *fiber.Ctx) error {
 }
 
 func Update(c *fiber.Ctx) error {
-
+	// Get the ID from the URL parameters
 	id := c.Params("id")
+
+	// Convert the ID from string to int
+	intID, err := strconv.Atoi(id)
+	if err != nil {
+		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
+			"message": "Invalid ID format",
+		})
+	}
 
 	var bahasa models.BahasaPasien
 
+	// Parse the request body into the struct
 	if err := c.BodyParser(&bahasa); err != nil {
 		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": err.Error(),
+			"message": "Invalid input",
+			"error":   err.Error(),
 		})
 	}
 
-	if models.DB.Where("id = ?", id).Updates(&bahasa).RowsAffected == 0 {
-		return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
-			"message": "Id tidak ditemukan.",
+	// Ensure the ID from the path is used
+	bahasa.Id = intID
+
+	// Update the record and check for affected rows
+	if result := models.DB.Model(&models.BahasaPasien{}).Where("id = ?", intID).Updates(&bahasa); result.RowsAffected == 0 {
+		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+			"message": "Record not found or no changes made.",
+		})
+	} else if result.Error != nil {
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Failed to update record.",
+			"error":   result.Error.Error(),
 		})
 	}
 
+	// Return success response
 	return c.JSON(fiber.Map{
-		"message": "Bahasa berhasil diubah.",
+		"message": "Record updated successfully.",
 	})
 }
 
