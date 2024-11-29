@@ -24,7 +24,25 @@ func Show(c *fiber.Ctx) error {
 		})
 	}
 
-	// Return the records
+	return c.JSON(bahasa)
+}
+
+func Index(c *fiber.Ctx) error {
+	id := c.Params("id")
+	var bahasa models.BahasaPasien
+
+	if err := models.DB.First(&bahasa, "id = ?", id).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
+				"message": "Data tidak ditemukan",
+			})
+		}
+		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
+			"message": "Gagal memuat data",
+			"error":   err.Error(),
+		})
+	}
+
 	return c.JSON(bahasa)
 }
 
@@ -40,13 +58,13 @@ func Create(c *fiber.Ctx) error {
 
 	if err := models.DB.Create(&bahasa).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Gagal untuk menyimpan bahasa",
+			"message": "Gagal untuk menyimpan",
 			"error":   err.Error(),
 		})
 	}
 
 	return c.Status(fiber.StatusCreated).JSON(fiber.Map{
-		"message": "Bahasa berhasil ditambahkan",
+		"message": "Data berhasil ditambahkan",
 		"data":    bahasa,
 	})
 }
@@ -64,7 +82,7 @@ func Update(c *fiber.Ctx) error {
 	if err := models.DB.First(&bahasa, id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-				"message": "Bahasa tidak ditemukan",
+				"message": "Data tidak ditemukan",
 			})
 		}
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
@@ -91,30 +109,26 @@ func Update(c *fiber.Ctx) error {
 
 	if err := models.DB.Model(&bahasa).Updates(&updatedBahasa).Error; err != nil {
 		return c.Status(fiber.StatusInternalServerError).JSON(fiber.Map{
-			"message": "Gagal untuk mengubah bahasa",
+			"message": "Gagal untuk mengubah data",
 			"error":   err.Error(),
 		})
 	}
 
-	// Return success response
 	return c.JSON(fiber.Map{
-		"message": "Bahasa berhasil diubah",
+		"message": "Data berhasil diubah",
 	})
 }
 
 func Delete(c *fiber.Ctx) error {
-	// Get the ID from the URL parameters
 	id := c.Params("id")
 
-	// Attempt to delete the record
 	if models.DB.Delete(&models.BahasaPasien{}, id).RowsAffected == 0 {
 		return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
-			"message": "Bahasa tidak ditemukan atau sudah dihapus",
+			"message": "Data tidak ditemukan atau sudah dihapus",
 		})
 	}
 
-	// Return success response
 	return c.JSON(fiber.Map{
-		"message": "Berhasil menghapus bahasa",
+		"message": "Berhasil menghapus data",
 	})
 }

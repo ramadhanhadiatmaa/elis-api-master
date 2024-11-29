@@ -11,26 +11,26 @@ import (
 
 var DB *gorm.DB
 
-func ConnectionDatabase(){
- if err := godotenv.Load(); err != nil {
-	log.Fatalf("Error loading .env file %v", err)
- }
+func ConnectionDatabase() {
+	if err := godotenv.Load(); err != nil {
+		log.Fatalf("Error loading .env file %v", err)
+	}
 
- dbHost := os.Getenv("DB_HOST")
- dbPort := os.Getenv("DB_PORT")
- dbUser := os.Getenv("DB_USER")
- dbPass := os.Getenv("DB_PASS")
- dbName := os.Getenv("DB_NAME")
+	dbHost := os.Getenv("DB_HOST")
+	dbPort := os.Getenv("DB_PORT")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbName := os.Getenv("DB_NAME")
 
- dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
- 	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	dsn := dbUser + ":" + dbPass + "@tcp(" + dbHost + ":" + dbPort + ")/" + dbName + "?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 
- if err != nil {
-	panic(err)
- }
+	if err != nil {
+		panic(err)
+	}
 
- db.AutoMigrate(BahasaPasien{})
- 
- DB = db
- 	
+	db.AutoMigrate(BahasaPasien{}, Kelurahan{})
+
+	DB = db
+
 }
