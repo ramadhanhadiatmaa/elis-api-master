@@ -28,10 +28,10 @@ func ShowKel(c *fiber.Ctx) error {
 }
 
 func IndexKel(c *fiber.Ctx) error {
-	id := c.Params("id")
-	var bahasa models.BahasaPasien
+	id := c.Params("kd_kel")
+	var kelurahan models.Kelurahan
 
-	if err := models.DB.First(&bahasa, "id = ?", id).Error; err != nil {
+	if err := models.DB.First(&kelurahan, "kd_kel = ?", id).Error; err != nil {
 		if err == gorm.ErrRecordNotFound {
 			return c.Status(fiber.StatusNotFound).JSON(fiber.Map{
 				"message": "Data tidak ditemukan",
@@ -43,7 +43,7 @@ func IndexKel(c *fiber.Ctx) error {
 		})
 	}
 
-	return c.JSON(bahasa)
+	return c.JSON(kelurahan)
 }
 
 func CreateKel(c *fiber.Ctx) error {

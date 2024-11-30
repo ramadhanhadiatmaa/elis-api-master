@@ -38,7 +38,7 @@ jobs:
           host: ${{ secrets.SERVER }}
           username: ${{ secrets.SERVER_USERNAME}}
           password: ${{ secrets.SERVER_PASSWORD}}
-          port: ${{ secrets.SERVER_PORT  }}
+          port: ${{ secrets.SERVER_PORT }}
           script: |
             whoami
             sudo docker stop ${{ vars.CONTAINER_NAME }} || true && docker rm ${{ vars.CONTAINER_NAME }} || true
