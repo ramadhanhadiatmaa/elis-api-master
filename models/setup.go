@@ -29,7 +29,7 @@ func ConnectionDatabase() {
 		panic(err)
 	}
 
-	db.AutoMigrate(BahasaPasien{}, Kelurahan{})
+	db.AutoMigrate(&BahasaPasien{}, &Kelurahan{})
 
 	DB = db
 
