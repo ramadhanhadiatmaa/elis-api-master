@@ -98,8 +98,8 @@ func UpdateKel(c *fiber.Ctx) error {
 		})
 	}
 
-	if updateKel.Kd != 0 && updateKel.Kd != id {
-		if err := models.DB.First(&models.Kelurahan{}, updateKel.Kd).Error; err == nil {
+	if updateKel.KdKel != 0 && updateKel.KdKel != id {
+		if err := models.DB.First(&models.Kelurahan{}, updateKel.KdKel).Error; err == nil {
 			return c.Status(fiber.StatusBadRequest).JSON(fiber.Map{
 				"message": "ID yang diubah telah digunakan",
 			})
